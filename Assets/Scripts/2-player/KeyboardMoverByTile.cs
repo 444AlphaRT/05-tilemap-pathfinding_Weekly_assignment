@@ -116,7 +116,9 @@ public class KeyboardMoverByTile : KeyboardMover
             if (!reachedCastle && nowOnCastle)
             {
                 reachedCastle = true;
-                Debug.Log("You reached the CASTLE! Goal completed 🎉");            }
+                Debug.Log("You reached the CASTLE! Goal completed 🎉");
+                this.enabled = false;
+            }
         }
         else
         {
