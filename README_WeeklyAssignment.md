@@ -92,6 +92,12 @@ https://alpha444rt.itch.io/part1weeklyassigment
 # Assignment 2.b
 **Scene used:** `d-tilemap-100-player.unity`
 
+--- 
+### קישור לאתר itch: 
+https://alpha444rt.itch.io/week6part2b
+
+---
+
 במטלה זו הוספנו בדיקה שמוודאת שהשחקן ממוקם רק על אריח שממנו ניתן להגיע ל־**100 אריחים נגישים לפחות** בעזרת BFS.
 
 ---
