@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 /**
  * A generic implementation of the BFS algorithm.
@@ -6,18 +6,16 @@
  * @since 2020-02
  */
 public class BFS {
-    public static List<NodeType> GetPath<NodeType>(
-            IGraph<NodeType> graph,
-            NodeType startNode, NodeType endNode,
-            int maxiterations=1000)
-        where NodeType : notnull
+    public static void FindPath<NodeType>(
+            IGraph<NodeType> graph, 
+            NodeType startNode, NodeType endNode, 
+            List<NodeType> outputPath, int maxiterations=1000)
     {
         Queue<NodeType> openQueue = new Queue<NodeType>();
         HashSet<NodeType> openSet = new HashSet<NodeType>();
         Dictionary<NodeType, NodeType> previous = new Dictionary<NodeType, NodeType>();
         openQueue.Enqueue(startNode);
         openSet.Add(startNode);
-        List<NodeType> outputPath = new List<NodeType>();
         int i; for (i = 0; i < maxiterations; ++i) { // After maxiterations, stop and return an empty path
             if (openQueue.Count == 0) {
                 break;
@@ -46,6 +44,52 @@ public class BFS {
                 }
             }
         }
-        return outputPath;
     }
+
+    public static List<NodeType> GetPath<NodeType>(IGraph<NodeType> graph, NodeType startNode, NodeType endNode, int maxiterations=1000) {
+        List<NodeType> path = new List<NodeType>();
+        FindPath(graph, startNode, endNode, path, maxiterations);
+        return path;
+    }
+    /*
+     * Counts the total number of unique nodes reachable from the startNode.
+     * Used to validate map connectivity.
+     */
+    public static int CountReachableNodes<NodeType>(
+            IGraph<NodeType> graph,
+            NodeType startNode,
+            int maxiterations = 10000)
+    {
+        Queue<NodeType> openQueue = new Queue<NodeType>();
+        HashSet<NodeType> visitedNodes = new HashSet<NodeType>();
+
+        openQueue.Enqueue(startNode);
+        visitedNodes.Add(startNode);
+
+        int i; for (i = 0; i < maxiterations; ++i)
+        {
+            if (openQueue.Count == 0)
+            {
+                break;
+            }
+            else
+            {
+                NodeType searchFocus = openQueue.Dequeue();
+
+                // Explore neighbors
+                foreach (var neighbor in graph.Neighbors(searchFocus))
+                {
+                    if (visitedNodes.Contains(neighbor))
+                    {
+                        continue;
+                    }
+                    openQueue.Enqueue(neighbor);
+                    visitedNodes.Add(neighbor);
+                }
+            }
+        }
+        return visitedNodes.Count; // מחזיר את סך הצמתים הנגישים
+    }
+
+
 }
