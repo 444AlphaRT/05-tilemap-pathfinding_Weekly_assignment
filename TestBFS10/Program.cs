@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -36,6 +36,35 @@ void Main() {
     Debug.Assert(pathString == "");
 
     Console.WriteLine("End BFS Test");
+
+    MockGraph graph = new MockGraph();
+    Console.WriteLine("--- Running BFS.CountReachableNodes Unit Tests ---");
+
+    // 1. בדיקה: אזור מחובר גדול (צפוי 3 צמתים נגישים)
+    int count1 = BFS.CountReachableNodes(graph, 1);
+    
+    if (count1 == 3)
+        Console.WriteLine("Test 1 (Connected Area) PASS: Count = 3");
+    else
+        Console.WriteLine($"Test 1 (Connected Area) FAIL: Expected 3, Got {count1}");
+
+
+    // 2. בדיקה: אזור מבודד קטן (צפוי 2 צמתים נגישים)
+    int count2 = BFS.CountReachableNodes(graph, 4);
+    
+    if (count2 == 2)
+        Console.WriteLine("Test 2 (Disconnected Area) PASS: Count = 2");
+    else
+        Console.WriteLine($"Test 2 (Disconnected Area) FAIL: Expected 2, Got {count2}");
+
+    int count3 = BFS.CountReachableNodes(graph, 99);
+    Console.WriteLine($"Test 3 (Start 99): Reachable Count = {count3}");
+    
+    // בדיקת יחידה: מוודאים ש-1 צמתים נגישים (צומת ההתחלה עצמו)
+    if (count3 == 1)
+        Console.WriteLine("Test 3 (Non-Existent Node) PASS");
+    else
+        Console.WriteLine($"Test 3 (Non-Existent Node) FAIL: Expected 1, Got {count3}"); // <--- תיקון ה-Expected
 }
 
 class IntGraph: IGraph<int>
@@ -53,5 +82,29 @@ class IntPairGraph : IGraph<IntPair> {
         yield return (node.Item1 + 1, node.Item2);
         yield return (node.Item1 - 1, node.Item2);
         //yield return (node.Item1 - 1, node.Item2+1);
+    }
+}
+public class MockGraph : IGraph<int>
+{
+    private Dictionary<int, List<int>> adjacencyList;
+
+    public MockGraph()
+    {
+        // גרף עם שני אזורים מבודדים: (1-2-3) ו- (4-5)
+        adjacencyList = new Dictionary<int, List<int>>
+        {
+            {1, new List<int> {2, 3}}, 
+            {2, new List<int> {1}},    
+            {3, new List<int> {1}},    
+            {4, new List<int> {5}},    
+            {5, new List<int> {4}}
+        };
+    }
+
+    public IEnumerable<int> Neighbors(int node)
+    {
+        if (adjacencyList.ContainsKey(node))
+            return adjacencyList[node];
+        return Enumerable.Empty<int>();
     }
 }
